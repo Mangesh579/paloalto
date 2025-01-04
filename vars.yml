@@ -1,0 +1,29 @@
+provider:
+  ip_address: '{{ inventory_hostname }}'
+  username: admin
+  password: Admin123!
+
+interfaces:
+  - name: ethernet1/1
+    ip: 192.168.59.1/24  # Gateway for devices in the 192.168.59.0/24 subnet
+    zone: trust
+    mode: layer3
+  - name: ethernet1/2
+    ip: 192.168.60.1/24  # Gateway for a new subnet (e.g., DMZ)
+    zone: dmz
+    mode: layer3
+  - name: ethernet1/3
+    ip: 192.168.61.1/24  # Gateway for another subnet (e.g., Untrust Zone)
+    zone: untrust
+    mode: layer3
+
+
+address_object:
+  - name: internal_subnet
+    value: 192.168.59.0/24  # Subnet for your internal devices
+  - name: dmz_subnet
+    value: 192.168.60.0/24  # Subnet for DMZ
+  - name: untrust_subnet
+    value: 192.168.61.0/24  # Subnet for untrusted devices
+  - name: external_network
+    value: 203.0.113.0/24  # Example public network
