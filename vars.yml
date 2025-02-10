@@ -20,10 +20,38 @@ interfaces:
 
 address_object:
   - name: internal_subnet
-    value: 192.168.59.0/24  # Subnet for your internal devices
+    value: 192.168.59.0/24  
   - name: dmz_subnet
-    value: 192.168.60.0/24  # Subnet for DMZ
+    value: 192.168.60.0/24  
   - name: untrust_subnet
-    value: 192.168.61.0/24  # Subnet for untrusted devices
+    value: 192.168.61.0/24  
   - name: external_network
-    value: 203.0.113.0/24  # Example public network
+    value: 203.0.113.0/24  
+
+security_policies:
+  - name: "Allow-Trust-to-Untrust-HTTP"
+    source_zone: ["trust"]
+    destination_zone: ["untrust"]
+    source_ip: ["192.168.59.129"]
+    destination_ip: ["192.168.59.100"]
+    application: ["any"]
+    service: ["application-default"]
+    action: "allow"
+  
+  - name: "Allow-Trust-to-Untrust-Custom8080"
+    source_zone: ["untrust"]
+    destination_zone: ["trust"]
+    source_ip: ["192.168.59.129"]
+    destination_ip: ["192.168.59.100"]
+    application: ["any"]
+    service: ["Custom-8080"]
+    action: "allow"
+
+  - name: "Allow-Trust-to-Untrust-Custom80"
+    source_zone: ["untrust"]
+    destination_zone: ["trust"]
+    source_ip: ["192.168.59.129"]
+    destination_ip: ["192.168.59.100"]
+    application: ["any"]
+    service: ["Custom-80"]
+    action: "allow"

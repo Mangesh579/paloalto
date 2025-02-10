@@ -1,0 +1,45 @@
+- name: Configure Security Policies on Palo Alto Firewall
+  hosts: ALL
+  connection: local
+  gather_facts: false
+
+  collections:
+    - paloaltonetworks.panos
+
+  tasks:
+    - name: Load Variables
+      include_vars: vars.yml
+
+    - name: Debug the variables
+      debug:
+        var: security_policies
+
+    - name: Create Security Policies
+      panos_security_rule:
+        provider: '{{ provider }}'
+        rule_name: '{{ item.name }}'
+        source_zone: '{{ item.source_zone }}'
+        destination_zone: '{{ item.destination_zone }}'
+        source_ip: '{{ item.source_ip }}'
+        destination_ip: '{{ item.destination_ip }}'
+        application: '{{ item.application }}'
+        service: 'application-default'  
+        action: '{{ item.action }}'
+        state: present
+      with_items: '{{ security_policies }}'
+
+    - name: Create Custom Service (Custom-8080)
+      panos_service_object:
+        provider: '{{ provider }}'
+        name: 'Custom-8080'
+        protocol: 'tcp'
+        destination_port: '8080'
+        state: 'present'
+    
+    - name: Create Custom Service (Custom-80)
+      panos_service_object:
+        provider: '{{ provider }}'
+        name: 'Custom-80'
+        protocol: 'tcp'
+        destination_port: '80'
+        state: 'present'
